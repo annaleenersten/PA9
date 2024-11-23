@@ -11,7 +11,7 @@ int main()
 	sf::Font font;
 	font.loadFromFile("font.ttf");
 
-	sf::Text text("Points: 100", font, 70);
+	sf::Text text("Points: ", font, 70);
 	text.setFillColor(sf::Color::Red);
 	sf::FloatRect bounds(text.getLocalBounds());
 	text.setPosition(0, 0);
@@ -75,7 +75,7 @@ int main()
 		for (int i = 0; i < 5; i++) {
 			for (int j = i; j < 10; j++) {
 				for (int k = j; k < 10; k++)
-				randomNum = std::rand() % 100;
+				randomNum = std::rand() % 150;
 				shapeArray[i].move(0, randomNum * time);
 
 				if (shapeArray[i].getPosition().y > window.getSize().y) {
