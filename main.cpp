@@ -1,34 +1,22 @@
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-
-#include "SFML/Graphics.hpp"
+#include "Player.hpp"
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(2000, 1000), "SFML works!");
 
+	Player player1;
+	player1.setPosition(window.getSize().x / 2 - 100, window.getSize().y - 200);
+
 	sf::Font font;
 	font.loadFromFile("font.ttf");
-
-	sf::Text text("Points: ", font, 70);
-	text.setFillColor(sf::Color::Red);
-	sf::FloatRect bounds(text.getLocalBounds());
-	text.setPosition(0, 0);
 
 	sf::Texture texture;
 	texture.loadFromFile("stars.jpg");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
-	sprite.scale((window.getSize().x/ sprite.getLocalBounds().width),(window.getSize().y/ sprite.getLocalBounds().height));
+	sprite.scale((window.getSize().x / sprite.getLocalBounds().width), (window.getSize().y / sprite.getLocalBounds().height));
 
-	sf::Texture texture2;
-	texture2.loadFromFile("ufo.png");
-	sf::Sprite sprite2(texture2);
-	sprite2.setPosition(window.getSize().x / 2 - (bounds.left + bounds.width / 2), window.getSize().y - 200);
-	sprite2.scale(0.15, 0.15);
 
-	
 	sf::CircleShape shapeArray[10];
 
 	for (int i = 0; i < 10; i++) {
@@ -47,11 +35,17 @@ int main()
 
 
 	sf::Clock clock;
-
+	int count = 0;
 
 	while (window.isOpen())
 	{
-		
+
+		std::string points = std::to_string(player1.getPoints());
+		sf::Text text("Points: " + points, font, 70);
+		text.setFillColor(sf::Color::Red);
+		sf::FloatRect bounds(text.getLocalBounds());
+		text.setPosition(0, 0);
+
 		float time = clock.restart().asSeconds();
 
 		sf::Event event;
@@ -65,17 +59,17 @@ int main()
 
 		if (event.type == sf::Event::EventType::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Left) {
-				sprite2.move(-1.0, 0);
+				player1.move(-1.0, 0);
 			}
 			if (event.key.code == sf::Keyboard::Right) {
-				sprite2.move(1.0, 0);
+				player1.move(1.0, 0);
 			}
 		}
-		
+
 		for (int i = 0; i < 5; i++) {
 			for (int j = i; j < 10; j++) {
 				for (int k = j; k < 10; k++)
-				randomNum = std::rand() % 150;
+					randomNum = std::rand() % 150;
 				shapeArray[i].move(0, randomNum * time);
 
 				if (shapeArray[i].getPosition().y > window.getSize().y) {
@@ -85,10 +79,11 @@ int main()
 
 			}
 		}
+
 		window.clear();
-		
+
 		for (int i = 0; i < 10; i++) {
-			if (sprite2.getGlobalBounds().intersects(shapeArray[i].getGlobalBounds())) {
+			if (player1.getGlobalBounds().intersects(shapeArray[i].getGlobalBounds())) {
 				window.draw(sprite);
 				window.draw(gameOver);
 				window.display();
@@ -97,12 +92,13 @@ int main()
 			}
 		}
 
+
 		window.draw(sprite);
 		window.draw(text);
 		for (int i = 0; i < 10; ++i) {
 			window.draw(shapeArray[i]);
 		}
-		window.draw(sprite2);
+		window.draw(player1);
 		window.display();
 
 	}
