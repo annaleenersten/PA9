@@ -70,7 +70,7 @@ void Game::run(sf::RenderWindow& window, Player& player, sf::Font& font, sf::Spr
 				sf::CircleShape circle;
 				circle.setRadius(window.getSize().x / 150);
 				circle.setFillColor(sf::Color::Red);
-				circle.setPosition(player.getPosition().x, player.getPosition().y);
+				circle.setPosition(player.getPosition().x +80, player.getPosition().y+80);
 				laser.push_back(circle);
 			}
 		}

@@ -28,12 +28,12 @@ void  Player::movePlayer(sf::Event event) {
 
 	if (event.type == sf::Event::EventType::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Left) {
-			move(-1.7, 0);
+			move(-1.3, 0);
 
 
 		}
 		if (event.key.code == sf::Keyboard::Right) {
-			move(1.7, 0);
+			move(1.3, 0);
 
 		}
 	}
