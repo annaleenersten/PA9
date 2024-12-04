@@ -11,12 +11,12 @@ void Game::create() {
 	font.loadFromFile("font.ttf");
 
 	sf::Texture texture;//background texture	
-	texture.loadFromFile("bg2.jpg");
+	texture.loadFromFile("stars.jpg");
 	//git hub test
 	sf::Texture alienSpriteTexture[10];//alien sprite texture array
 	for (int i = 0; i < 10; ++i)
 	{
-		if (!alienSpriteTexture[i].loadFromFile("alien.png"))
+		if (!alienSpriteTexture[i].loadFromFile("purpleAlien.png"))
 		{
 			std::cerr << "Sprite texture no work at index: " << i << std::endl;
 		}
@@ -32,8 +32,8 @@ void Game::create() {
 	for (int i = 0; i < 10; i++) {//set shape size, color, position
 
 		shapeArray[i].setTexture(alienSpriteTexture[i]);//set sprite texture
-		shapeArray[i].setScale(0.3f, 0.3f);//set scale
-		shapeArray[i].setPosition(-80, -80);//set pos
+		shapeArray[i].setScale(0.15f, 0.15f);//set scale
+		shapeArray[i].setPosition(-150, -150);//set pos
 	}
 
 	
