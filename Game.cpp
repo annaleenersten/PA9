@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <vector>
 
 void Game::create() {
 
@@ -12,38 +13,28 @@ void Game::create() {
 
 	sf::Texture texture;//background texture	
 	texture.loadFromFile("stars.jpg");
-	//git hub test
-	sf::Texture alienSpriteTexture[10];//alien sprite texture array
-	for (int i = 0; i < 10; ++i)
-	{
-		if (!alienSpriteTexture[i].loadFromFile("purpleAlien.png"))
-		{
-			std::cerr << "Sprite texture no work at index: " << i << std::endl;
-		}
-	}
-
 	sf::Sprite sprite(texture);//set sprite to texture
 	sprite.setPosition(0, 0);
 	sprite.scale((window.getSize().x / sprite.getLocalBounds().width), (window.getSize().y / sprite.getLocalBounds().height));
 
 
+	sf::Texture alienSpriteTexture;//alien sprite texture array
+	alienSpriteTexture.loadFromFile("purpleAlien.png");
+
 	sf::Sprite shapeArray[10];//sprite array
 
 	for (int i = 0; i < 10; i++) {//set shape size, color, position
 
-		shapeArray[i].setTexture(alienSpriteTexture[i]);//set sprite texture
+		shapeArray[i].setTexture(alienSpriteTexture);//set sprite texture
 		shapeArray[i].setScale(0.15f, 0.15f);//set scale
 		shapeArray[i].setPosition(-150, -150);//set pos
 	}
 
-	
 
 	sf::Text gameOver("GAME OVER", font, 150);//game over stuff
 	gameOver.setFillColor(sf::Color::Red);
 	sf::FloatRect bounds2(gameOver.getLocalBounds());
 	gameOver.setPosition(window.getSize().x / 2 - (bounds2.left + bounds2.width / 2), window.getSize().y / 2 - (bounds2.top + bounds2.height / 2));
-
-
 
 	run(window, player1, font, shapeArray, gameOver, sprite);
 }
@@ -53,16 +44,12 @@ void Game::run(sf::RenderWindow& window, Player& player, sf::Font& font, sf::Spr
 	std::srand(static_cast<unsigned>(std::time(0)));
 	float randomNum = 0;
 	sf::Clock clock;
-	int count = 0;
+
+	std::vector<sf::CircleShape> laser;
 
 	while (window.isOpen())
 	{
-
-		std::string points = std::to_string(player.getPoints());
-		sf::Text text("Points: " + points, font, 70);
-		text.setFillColor(sf::Color::Red);
-		sf::FloatRect bounds(text.getLocalBounds());
-		text.setPosition(0, 0);
+	
 
 		float time = clock.restart().asSeconds();
 
@@ -76,20 +63,42 @@ void Game::run(sf::RenderWindow& window, Player& player, sf::Font& font, sf::Spr
 
 		}
 
-		//character movement key presses
-		if (event.type == sf::Event::EventType::KeyPressed) {
-			if (event.key.code == sf::Keyboard::Left) {
-				player.move(-1.0, 0);
-			}
-			if (event.key.code == sf::Keyboard::Right) {
-				player.move(1.0, 0);
+		player.movePlayer(event);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			if (laser.size() < 30) {
+				sf::CircleShape circle;
+				circle.setRadius(window.getSize().x / 150);
+				circle.setFillColor(sf::Color::Red);
+				circle.setPosition(player.getPosition().x, player.getPosition().y);
+				laser.push_back(circle);
 			}
 		}
+	
+
+		for (int i = 0; i < laser.size(); ++i) {
+			laser[i].move(0, -1.5);  // Move laser upwards
+
+			if (laser[i].getPosition().y < 0) {
+				laser.pop_back();
+			}
+		}
+
+		for (int i = 0; i < laser.size(); ++i) {
+			for (int j = 0; j < 10; j++) {
+				if (laser[i].getGlobalBounds().intersects(shapeArray[j].getGlobalBounds())) {
+					player.setPoints(player.getPoints() + 1);
+					laser[i].setFillColor(sf::Color::Transparent);
+					shapeArray[j].move(0, -2);
+				}
+			}
+		}
+			
 
 		for (int i = 0; i < 5; i++) {
 			for (int j = i; j < 10; j++) {
 				for (int k = j; k < 10; k++)
-					randomNum = std::rand() % 150;
+					randomNum = std::rand() % 120;
 				shapeArray[i].move(0, randomNum * time);
 
 				if (shapeArray[i].getPosition().y > window.getSize().y) {
@@ -115,10 +124,14 @@ void Game::run(sf::RenderWindow& window, Player& player, sf::Font& font, sf::Spr
 
 
 		window.draw(sprite);
-		window.draw(text);
+		window.draw(player.displayPoints(font));
 		for (int i = 0; i < 10; ++i) {
 			window.draw(shapeArray[i]);
 		}
+		for (int i = 0; i < laser.size(); ++i) {
+			window.draw(laser[i]);
+		}
+		
 		window.draw(player);
 		window.display();
 

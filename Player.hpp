@@ -14,7 +14,6 @@ public:
 
 	void setPoints(const int newPoints);
 	int getPoints() const;
-
-	void level2();
-	void level3();
+	sf::Text displayPoints(sf::Font& font);
+	void movePlayer(sf::Event event);
 };
