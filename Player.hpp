@@ -14,4 +14,7 @@ public:
 
 	void setPoints(const int newPoints);
 	int getPoints() const;
+
+	void level2();
+	void level3();
 };
