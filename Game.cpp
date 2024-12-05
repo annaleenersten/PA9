@@ -88,7 +88,9 @@ void Game::run(sf::RenderWindow& window, Player& player, sf::Font& font, sf::Spr
 			for (int j = 0; j < 10; j++) {
 				if (laser[i].getGlobalBounds().intersects(shapeArray[j].getGlobalBounds())) {
 					player.setPoints(player.getPoints() + 1);
-					laser[i].setFillColor(sf::Color::Transparent);
+					for (int i = 0; i < laser.size(); ++i) {
+						laser[i].setFillColor(sf::Color::Transparent);
+					}
 					shapeArray[j].move(0, -2);
 				}
 			}
